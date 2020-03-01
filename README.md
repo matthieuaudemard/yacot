@@ -1,3 +1,5 @@
+![Preview](https://i.ibb.co/HKsdYqp/yacot.png "Preview")
+
 # YACOT
 Means Yet Another COronavirus Tracker is an web application which lists the current number of cases reported around
 the world.
