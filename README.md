@@ -11,3 +11,5 @@ Java >= 8
 `git clone`
 
 `mvn spring-boot:run`
+
+open your favorite browser at http://localhost:8080
