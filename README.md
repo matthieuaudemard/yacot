@@ -1,9 +1,9 @@
 ![Preview](https://i.ibb.co/HKsdYqp/yacot.png "Preview")
 
 # YACOT
-Means Yet Another COronavirus Tracker is an web application which lists the current number of cases reported around
+Means Yet Another COronavirus Tracker is a web application which lists the current number of cases reported around
 the world.
-Data are provided from [this repository](https://github.com/CSSEGISandData/COVID-19). **I have no idea about their
+Data are provided by [this repository](https://github.com/CSSEGISandData/COVID-19). **I have no idea about their
 validity**.
 
 ## Requirements
