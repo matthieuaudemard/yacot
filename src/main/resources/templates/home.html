@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>YACoT</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" rel="stylesheet">
+</head>
+<body>
+
+
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <img alt="Yaco is praying for you"
+                     src="https://static.tvtropes.org/pmwiki/pub/images/toothy-bird_iago-aladdin_4075.png"
+                     title="Yaco is praying for you">
+            </div>
+            <div class="col-lg-9">
+                <h1 class="display-4">YACoT<br>Yet Another COronavirus Tracker</h1>
+                <h2 th:text="${totalReportedCases}"></h2>
+                <p class="lead">Total cases reported as of today</p>
+                <hr class="my-4">
+                <p>
+                    <span>New cases reported since previous day :</span>
+                    <span th:text="${totalNewCases}"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <table class="table" id="tableStat">
+        <tr>
+            <th>Country</th>
+            <th>State</th>
+            <th>Total cases reported</th>
+            <th>Difference since last day</th>
+        </tr>
+        <tr th:each="stat : ${locationStats}">
+            <td th:text="${stat.getState()}"></td>
+            <td th:text="${stat.getCounty()}"></td>
+            <td th:text="${stat.getLatestTotalCases()}"></td>
+            <td th:text="${stat.getDiffFromPreviousDay()}"></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
