@@ -19,7 +19,7 @@
                      title="Yaco is praying for you">
             </div>
             <div class="col-lg-9">
-                <h1 class="display-4">YACOT</h1>
+                <h1 class="display-4"><a class="text-dark" href="/">YACOT</a></h1>
                 <h2>Yet Another COronavirus Tracker</h2>
                 <p class="lead">Total cases reported as of today :</p>
                 <h3 class="" th:text="${totalReportedCases}"></h3>
@@ -42,10 +42,15 @@
             <th>Difference since last day</th>
         </tr>
         <tr th:each="stat : ${locationStats}">
-            <td th:text="${stat.getState()}"></td>
-            <td th:text="${stat.getCounty()}"></td>
-            <td th:text="${stat.getLatestTotalCases()}"></td>
-            <td th:text="${stat.getDiffFromPreviousDay()}"></td>
+            <td>
+                <a th:href="@{/country/{country}(country=${stat.country})}"
+                   th:text="${stat.country}"></a>
+            </td>
+            <td>
+                <a th:href="@{/state/{state}(state=${stat.state})}"
+                   th:text="${stat.state}"></a></td>
+            <td th:text="${stat.count}"></td>
+            <td th:text="${stat.lastIncrease}"></td>
         </tr>
     </table>
 </div>
