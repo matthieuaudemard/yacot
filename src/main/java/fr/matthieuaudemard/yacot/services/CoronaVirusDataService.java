@@ -31,9 +31,9 @@ import static java.util.stream.Collectors.summingInt;
 @Service
 public class CoronaVirusDataService {
 
-    private static String VIRUS_DATA_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv";
+    private static final String VIRUS_DATA_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv";
 
-    private static Pattern DATE_PATTERN = Pattern.compile("\\d{1,2}/\\d{1,2}/\\d{2}");
+    private static final Pattern DATE_PATTERN = Pattern.compile("\\d{1,2}/\\d{1,2}/\\d{2}");
 
     private List<LocationStat> stats = new ArrayList<>();
 
@@ -58,7 +58,7 @@ public class CoronaVirusDataService {
      * Get virus data from Github repository
      * This Method is executed just once a day due to scheduled CRON task
      *
-     * @throws IOException if request to Github repository fails
+     * @throws IOException if the request to Github repository fails
      */
     @PostConstruct
     @Scheduled(cron = "0 0 1 * * *")
@@ -83,21 +83,33 @@ public class CoronaVirusDataService {
                     stat.setState(record.get("Province/State"));
                     stat.setCountry(record.get("Country/Region"));
 
-                    Map<String, String> map = record.toMap();
+                    // Stores the current record into a map
+                    Map<String, String> csvMap = record.toMap();
                     List<Report> reports = new ArrayList<>();
 
-                    for (Map.Entry<String, String> e : map.entrySet()) {
-                        // A date formatted key defines a Report entry
+                    for (Map.Entry<String, String> e : csvMap.entrySet()) {
+                        // A date formatted key defines a Report entry.
+                        // If it doesn't match, the key matches "Province/State" or "Country/Region" and should be
+                        // ignored as it has already been treated
                         if (CoronaVirusDataService.DATE_PATTERN.matcher(e.getKey()).find()) {
                             LocalDate date = CoronaVirusDataService.parseDate(e.getKey());
                             Report report = new Report();
                             report.setDate(date);
-                            int totalCount = Integer.parseInt(e.getValue());
-                            report.setTotalCase(totalCount);
-                            Integer dateCount = reports.isEmpty() ? totalCount :
-                                    totalCount - reports.get(reports.size() - 1).getTotalCase();
-                            report.setDailyNewCase(dateCount);
-                            reports.add(report);
+                            try {
+                                int totalCase = Integer.parseInt(e.getValue());
+                                int lastTotalCase = reports.isEmpty() ? 0 : reports.get(reports.size() - 1).getTotalCase();
+                                // Prevent the newCases to be negative
+                                if (totalCase < lastTotalCase) {
+                                    report.setTotalCase(lastTotalCase);
+                                    report.setDailyNewCase(0);
+                                } else {
+                                    report.setTotalCase(totalCase);
+                                    report.setDailyNewCase(totalCase - lastTotalCase);
+                                }
+                                reports.add(report);
+                            } catch (NumberFormatException ignored) {
+                                // If a NumberFormatException is raised, simply ignore the report.
+                            }
                         }
                     }
                     // Sort the reports by chronological order
