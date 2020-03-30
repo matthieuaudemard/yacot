@@ -21,7 +21,8 @@
             <div class="col-lg-9">
                 <h1 class="display-4"><a class="text-dark" href="/">YACOT</a></h1>
                 <h2>Yet Another COronavirus Tracker</h2>
-                <p class="lead">Total cases reported as of today in <span th:text="${stat.state}"></span></p>
+                <p class="lead">Total cases reported as of today in <span th:text="${stat.state}"></span> (latest report
+                    <span th:text="${latestReportDate}"></span>)</p>
                 <h3 class="" th:text="${stat.count}"></h3>
                 <hr class="my-4">
                 <p>

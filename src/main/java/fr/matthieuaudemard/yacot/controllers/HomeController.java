@@ -1,6 +1,7 @@
 package fr.matthieuaudemard.yacot.controllers;
 
 import fr.matthieuaudemard.yacot.models.LocationStat;
+import fr.matthieuaudemard.yacot.models.Report;
 import fr.matthieuaudemard.yacot.services.CoronaVirusDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -47,10 +49,10 @@ public class HomeController {
         List<LocationStat> locationStats = coronaVirusDataService.getStats();
         int totalReportedCases = getTotalReportedCases(locationStats);
         int totalNewCases = getTotalNewCases(locationStats);
-
         model.addAttribute("locationStats", locationStats);
         model.addAttribute("totalReportedCases", totalReportedCases);
         model.addAttribute("totalNewCases", totalNewCases);
+        model.addAttribute("latestReportDate", locationStats.get(0).getLatestReportDate());
         return "home";
     }
 
@@ -58,6 +60,7 @@ public class HomeController {
     public String state(@PathVariable(value = "state") String state, Model model) {
         LocationStat stat = coronaVirusDataService.getCaseByState(state);
         model.addAttribute("stat", stat);
+        model.addAttribute("latestReportDate", stat.getLatestReportDate());
         return "state";
     }
 
@@ -65,6 +68,7 @@ public class HomeController {
     public String country(@PathVariable(value = "country") String country, Model model) {
         LocationStat stat = coronaVirusDataService.getCaseByCountry(country);
         model.addAttribute("stat", stat);
+        model.addAttribute("latestReportDate", stat.getLatestReportDate());
         return "country";
     }
 }

@@ -1,5 +1,6 @@
 package fr.matthieuaudemard.yacot.models;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,11 +38,18 @@ public class LocationStat {
     }
 
     public int getLastIncrease() {
-        Optional<Report> lastReport = reports.stream().skip(reports.size() - 1).findFirst();
-        return lastReport.isPresent() ?
-                lastReport.get()
-                        .getDailyNewCase()
-                : 0;
+        // Search the last report in the list by skipping (size - 1) elements
+        Optional<Report> lastReport = reports.stream()
+                .skip(reports.size() - (long) 1)
+                .findFirst();
+        return lastReport.isPresent() ? lastReport.get().getDailyNewCase() : 0;
+    }
+
+    public LocalDate getLatestReportDate() {
+        return reports.stream()
+                .map(Report::getDate)
+                .max(LocalDate::compareTo)
+                .orElse(null);
     }
 
     public List<Report> getReports() {
